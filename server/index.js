@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 
-fs.createReadStream("../server/names.csv")
+fs.createReadStream("names.csv")
   .pipe(csv())
   .on('data', function (row) {
     const name = row.Firstname;
