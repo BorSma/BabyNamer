@@ -1,8 +1,9 @@
 // server/index.js
 
 const express = require("express");
-const fs = require('fs')
-const csv = require('csv-parser')
+const fs = require('fs');
+const csv = require('csv-parser');
+const path = require('path');
 const names = [];
 
 const PORT = process.env.PORT || 3001;
@@ -22,6 +23,9 @@ fs.createReadStream("../BabyNamer/server/names.csv")
       // TODO: SAVE users data to another file
     })
 
+// Have Node serve the files for our built React app
+app.use(express.static(path.resolve(__dirname, '../client/build')));
+
 app.get("/api", (req, res) => {
   res.json({ message: "Baby Name Generator v1.0" });
 });
@@ -31,6 +35,15 @@ app.get("/name", (req, res) => {
     res.json({ message: names[n] });
   });
 
+// All other GET requests not handled before will return our React app
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+});
+
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
+
+
+
+
